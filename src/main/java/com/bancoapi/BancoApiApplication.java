@@ -8,7 +8,7 @@ public class BancoApiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BancoApiApplication.class, args);
-                System.out.println("");
+                System.out.println("PRUEBA");
 
 	}
 
