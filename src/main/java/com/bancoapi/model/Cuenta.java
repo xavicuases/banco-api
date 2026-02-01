@@ -22,7 +22,21 @@ public class Cuenta {
     @OneToMany(mappedBy = "cuenta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Movimiento> movimientos;
 
+    // Relación con clientes
+    @ManyToOne
+    @JoinColumn(name = "cliente_id", nullable = false)
+    private Cliente cliente;
+
     // ===== getters y setters =====
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
     public Long getId() {
         return id;
     }
