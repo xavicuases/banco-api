@@ -17,6 +17,7 @@ public class Cuenta {
     private String tipoCuenta;
     private Double saldoInicial;
     private Boolean estado;
+    private Double saldo;
 
     // Relación con movimientos
     @OneToMany(mappedBy = "cuenta", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -62,6 +63,7 @@ public class Cuenta {
     }
 
     public Double getSaldoInicial() {
+        
         return saldoInicial;
     }
 
@@ -83,6 +85,14 @@ public class Cuenta {
 
     public void setMovimientos(List<Movimiento> movimientos) {
         this.movimientos = movimientos;
+    }
+
+    public Double getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(Double saldo) {
+        this.saldo = saldo;
     }
 }
 

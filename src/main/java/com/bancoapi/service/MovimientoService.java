@@ -3,15 +3,21 @@ package com.bancoapi.service;
 import com.bancoapi.model.Movimiento;
 import com.bancoapi.repository.MovimientoRepository;
 import org.springframework.stereotype.Service;
+import com.bancoapi.model.Cuenta;
+import com.bancoapi.repository.CuentaRepository;
+import java.time.LocalDateTime;
 
 import java.util.List;
 
 @Service
 public class MovimientoService {
     private final MovimientoRepository movimientoRepo;
+    private final CuentaRepository cuentaRepo;
 
-    public MovimientoService(MovimientoRepository movimientoRepo) {
+    public MovimientoService(MovimientoRepository movimientoRepo,
+                             CuentaRepository cuentaRepo) {
         this.movimientoRepo = movimientoRepo;
+        this.cuentaRepo = cuentaRepo;
     }
 
     // LISTAR
@@ -27,6 +33,24 @@ public class MovimientoService {
 
     // CREAR
     public Movimiento crear(Movimiento m) {
+
+        Cuenta cuenta = cuentaRepo.findById(
+                m.getCuenta().getId()
+        ).orElseThrow(() -> new RuntimeException("Cuenta no existe"));
+
+        double saldoActual = cuenta.getSaldo();
+        double nuevoSaldo = saldoActual + m.getValor();
+
+        if (nuevoSaldo < 0) {
+            throw new RuntimeException("Saldo no disponible");
+        }
+
+        cuenta.setSaldo(nuevoSaldo);
+        cuentaRepo.save(cuenta);
+
+        m.setFecha(LocalDateTime.now());
+        m.setSaldo(nuevoSaldo);
+
         return movimientoRepo.save(m);
     }
 
@@ -47,4 +71,5 @@ public class MovimientoService {
     public void eliminar(Long id) {
         movimientoRepo.deleteById(id);
     }
+
 }
