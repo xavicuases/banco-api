@@ -1,6 +1,7 @@
 package com.bancoapi.controller;
 import com.bancoapi.model.Movimiento;
 import com.bancoapi.service.MovimientoService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,8 +35,15 @@ public class MovimientoController {
     // CREAR
     // ======================
     @PostMapping
-    public Movimiento crear(@RequestBody Movimiento m) {
-        return movimientoService.crear(m);
+    public ResponseEntity<?> crear(@RequestBody Movimiento m) {
+        try {
+            Movimiento nuevo = movimientoService.crear(m);
+            return ResponseEntity.ok(nuevo);
+        } catch (RuntimeException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
     }
 
     // ======================
