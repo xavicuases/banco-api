@@ -51,6 +51,12 @@ public class MovimientoService {
         m.setFecha(LocalDateTime.now());
         m.setSaldo(nuevoSaldo);
 
+        if (m.getValor() > 0) {
+            m.setTipoMovimiento("Deposito de " + m.getValor());
+        } else {
+            m.setTipoMovimiento("Retiro de " + Math.abs(m.getValor()));
+        }
+
         return movimientoRepo.save(m);
     }
 
