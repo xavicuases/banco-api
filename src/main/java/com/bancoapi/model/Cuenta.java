@@ -1,6 +1,7 @@
 package com.bancoapi.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class Cuenta {
     // Relación con clientes
     @ManyToOne
     @JoinColumn(name = "cliente_id", nullable = false)
+    @JsonIgnoreProperties({"cuentas"})
     private Cliente cliente;
 
     // ===== getters y setters =====
