@@ -1,5 +1,6 @@
 package com.bancoapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class Cuenta {
 
     // Relación con movimientos
     @OneToMany(mappedBy = "cuenta", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Movimiento> movimientos;
 
     // Relación con clientes
