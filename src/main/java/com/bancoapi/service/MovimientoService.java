@@ -34,15 +34,33 @@ public class MovimientoService {
     // CREAR
     public Movimiento crear(Movimiento m) {
 
-        Cuenta cuenta = cuentaRepo.findById(
-                m.getCuenta().getId()
-        ).orElseThrow(() -> new RuntimeException("Cuenta no existe"));
+        Cuenta cuenta = cuentaRepo
+                .findByNumeroCuenta(m.getNumeroCuenta())
+                .orElseThrow(() -> new RuntimeException("Cuenta no encontrada"));
 
         double saldoActual = cuenta.getSaldo();
-        double nuevoSaldo = saldoActual + m.getValor();
+        double nuevoSaldo = saldoActual;
 
-        if (nuevoSaldo < 0) {
-            throw new RuntimeException("Saldo no disponible");
+        if (m.getTipoMovimiento().equalsIgnoreCase("RETIRO")) {
+
+            if (saldoActual < m.getValor()) {
+                throw new RuntimeException("Saldo no disponible");
+            }
+
+            nuevoSaldo = saldoActual - m.getValor();
+
+            m.setTipoMovimiento("Retiro de " + m.getValor());
+
+        }
+        else if (m.getTipoMovimiento().equalsIgnoreCase("DEPOSITO")) {
+
+            nuevoSaldo = saldoActual + m.getValor();
+
+            m.setTipoMovimiento("Deposito de " + m.getValor());
+
+        }
+        else {
+            throw new RuntimeException("Tipo de movimiento inválido");
         }
 
         cuenta.setSaldo(nuevoSaldo);
@@ -50,12 +68,7 @@ public class MovimientoService {
 
         m.setFecha(LocalDateTime.now());
         m.setSaldo(nuevoSaldo);
-
-        if (m.getValor() > 0) {
-            m.setTipoMovimiento("Deposito de " + m.getValor());
-        } else {
-            m.setTipoMovimiento("Retiro de " + Math.abs(m.getValor()));
-        }
+        m.setCuenta(cuenta);
 
         return movimientoRepo.save(m);
     }
