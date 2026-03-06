@@ -19,6 +19,11 @@ public class CuentaService {
     }
 
     public Cuenta guardar(Cuenta cuenta) {
+
+        if (cuenta.getSaldo() == null) {
+            cuenta.setSaldo(cuenta.getSaldoInicial());
+        }
+
         return cuentaRepository.save(cuenta);
     }
 

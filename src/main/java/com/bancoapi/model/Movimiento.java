@@ -1,5 +1,6 @@
 package com.bancoapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -7,6 +8,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "movimientos")
 public class Movimiento {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,12 +21,18 @@ public class Movimiento {
 
     private Double saldo; // saldo resultante después del movimiento
 
+    // NUEVO → para recibir número de cuenta en el JSON
+    @Transient
+    private String numeroCuenta;
+
     // Relación con Cuenta
     @ManyToOne
     @JoinColumn(name = "cuenta_id")
+    @JsonIgnoreProperties({"movimientos" , "cliente"})
     private Cuenta cuenta;
 
     // ===== getters y setters =====
+
     public Long getId() {
         return id;
     }
@@ -71,5 +79,13 @@ public class Movimiento {
 
     public void setCuenta(Cuenta cuenta) {
         this.cuenta = cuenta;
+    }
+
+    public String getNumeroCuenta() {
+        return numeroCuenta;
+    }
+
+    public void setNumeroCuenta(String numeroCuenta) {
+        this.numeroCuenta = numeroCuenta;
     }
 }
