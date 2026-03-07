@@ -1,8 +1,10 @@
 package com.bancoapi.controller;
+import com.bancoapi.dto.ClienteDTO;
 import com.bancoapi.model.Cliente;
 import com.bancoapi.service.ClienteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +20,13 @@ public class ClienteController {
         this.clienteService = clienteService;
     }
 
+    @GetMapping("/dto/{id}")
+    public ClienteDTO obtenerDTO(@PathVariable Long id) {
+
+        Cliente cliente = clienteService.obtener(id);
+
+        return clienteService.convertirADTO(cliente);
+    }
     @PostMapping
     public ResponseEntity<Cliente> crearCliente(@RequestBody Cliente cliente) {
         return ResponseEntity.ok(clienteService.crearCliente(cliente));
