@@ -21,22 +21,11 @@ public class ClienteController {
     }
 
     @GetMapping("/dto/{id}")
-    public ResponseEntity<?> obtenerDTO(@PathVariable Long id) {
-
-        try {
-            Cliente cliente = clienteService.obtener(id);
-
-            ClienteDTO dto = clienteService.convertirADTO(cliente);
-
-            return ResponseEntity.ok(dto);
-
-        } catch (RuntimeException e) {
-
-            return ResponseEntity
-                    .badRequest()
-                    .body("Cliente no encontrado o no existe");
-        }
+    public ResponseEntity<ClienteDTO> obtenerDTO(@PathVariable Long id) {
+        Cliente cliente = clienteService.obtener(id);
+        return ResponseEntity.ok(clienteService.convertirADTO(cliente));
     }
+
     @GetMapping("/dto")
     public ResponseEntity<List<ClienteDTO>> listarClientesDTO() {
 

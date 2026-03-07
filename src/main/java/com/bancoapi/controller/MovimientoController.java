@@ -36,14 +36,8 @@ public class MovimientoController {
     // ======================
     @PostMapping
     public ResponseEntity<?> crear(@RequestBody Movimiento m) {
-        try {
             Movimiento nuevo = movimientoService.crear(m);
             return ResponseEntity.ok(nuevo);
-        } catch (RuntimeException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-        }
     }
 
     // ======================
