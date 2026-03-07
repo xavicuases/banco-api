@@ -59,10 +59,13 @@ public class ClienteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cliente> obtenerCliente(@PathVariable Long id) {
+    public ResponseEntity<?> obtenerCliente(@PathVariable Long id) {
+
         return clienteService.obtenerClientePorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .<ResponseEntity<?>>map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity
+                        .status(404)
+                        .body("Cliente no encontrado o no existe"));
     }
 
     @PutMapping
