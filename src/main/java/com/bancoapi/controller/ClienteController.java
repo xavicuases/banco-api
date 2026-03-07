@@ -21,11 +21,32 @@ public class ClienteController {
     }
 
     @GetMapping("/dto/{id}")
-    public ClienteDTO obtenerDTO(@PathVariable Long id) {
+    public ResponseEntity<?> obtenerDTO(@PathVariable Long id) {
 
-        Cliente cliente = clienteService.obtener(id);
+        try {
+            Cliente cliente = clienteService.obtener(id);
 
-        return clienteService.convertirADTO(cliente);
+            ClienteDTO dto = clienteService.convertirADTO(cliente);
+
+            return ResponseEntity.ok(dto);
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body("Cliente no encontrado o no existe");
+        }
+    }
+    @GetMapping("/dto")
+    public ResponseEntity<List<ClienteDTO>> listarClientesDTO() {
+
+        List<Cliente> clientes = clienteService.obtenerClientes();
+
+        List<ClienteDTO> clientesDTO = clientes.stream()
+                .map(clienteService::convertirADTO)
+                .toList();
+
+        return ResponseEntity.ok(clientesDTO);
     }
     @PostMapping
     public ResponseEntity<Cliente> crearCliente(@RequestBody Cliente cliente) {
