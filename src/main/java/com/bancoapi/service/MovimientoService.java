@@ -49,9 +49,13 @@ public class MovimientoService {
                 throw new RuntimeException("Saldo no disponible");
             }
             nuevoSaldo = saldoActual - valorMovimiento;
+            m.setTipoMovimiento("Retiro de " + m.getValor());
+
             // Opcional: mantener el tipo original pero con descripción si tienes el campo
         } else if (m.getTipoMovimiento().equalsIgnoreCase("DEPOSITO")) {
             nuevoSaldo = saldoActual + valorMovimiento;
+            m.setTipoMovimiento("Deposito de " + m.getValor());
+
         } else {
             throw new RuntimeException("Tipo de movimiento inválido");
         }
