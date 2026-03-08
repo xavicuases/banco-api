@@ -68,6 +68,7 @@ public class MovimientoService {
         m.setFecha(LocalDateTime.now());
         m.setSaldo(nuevoSaldo); // Saldo que quedó después de la operación
         m.setCuenta(cuenta);
+        m.setNumeroCuenta(cuenta.getNumeroCuenta());
 
         return movimientoRepo.save(m);
     }
