@@ -26,6 +26,7 @@ public class Movimiento {
     @Transient
     private String numeroCuenta;
 
+    // Para pasar el número de cuenta en reportes
     @JsonProperty("numeroCuenta")
     public String getNumeroCuentaReporte() {
         return cuenta != null ? cuenta.getNumeroCuenta() : numeroCuenta;
