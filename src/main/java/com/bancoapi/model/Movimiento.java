@@ -1,6 +1,7 @@
 package com.bancoapi.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -24,6 +25,11 @@ public class Movimiento {
     // NUEVO → para recibir número de cuenta en el JSON
     @Transient
     private String numeroCuenta;
+
+    @JsonProperty("numeroCuenta")
+    public String getNumeroCuentaReporte() {
+        return cuenta != null ? cuenta.getNumeroCuenta() : numeroCuenta;
+    }
 
     // Relación con Cuenta
     @ManyToOne
