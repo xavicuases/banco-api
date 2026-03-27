@@ -1,6 +1,10 @@
 package com.bancoapi.service;
 
 
+import com.bancoapi.dto.CuentaReporteDTO;
+import com.bancoapi.dto.EstadoCuentaDTO;
+import com.bancoapi.dto.MovimientoReporteDTO;
+import com.bancoapi.exception.ResourceNotFoundException;
 import com.bancoapi.model.Cliente;
 import com.bancoapi.model.Cuenta;
 import com.bancoapi.model.Movimiento;
@@ -65,6 +69,40 @@ public class ReporteService {
         reporte.put("cuentas", cuentasReporte);
 
         return reporte;
+    }
+
+    // NUEVO MÉTODO LIMPIO (El que usaremos para el nuevo endpoint)
+    // 1. REPORTE POR ID
+    public EstadoCuentaDTO generarReporteLimpio(Long clienteId, LocalDateTime fechaInicio, LocalDateTime fechaFin) {
+        Cliente cliente = clienteRepository.findById(clienteId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con ID: " + clienteId));
+
+        return mapearADTO(cliente, fechaInicio, fechaFin);
+    }
+
+    // 2. REPORTE MASIVO (Para todos los clientes)
+    public List<EstadoCuentaDTO> generarTodosLosReportesLimpio(LocalDateTime inicio, LocalDateTime fin) {
+        return clienteRepository.findAll().stream()
+                .map(cliente -> mapearADTO(cliente, inicio, fin))
+                .toList();
+    }
+
+    // MÉTODO PRIVADO (Para no repetir la lógica del for en ambos métodos)
+    private EstadoCuentaDTO mapearADTO(Cliente cliente, LocalDateTime inicio, LocalDateTime fin) {
+        List<Cuenta> cuentas = cuentaRepository.findByClienteId(cliente.getId());
+        List<CuentaReporteDTO> cuentasReporte = new ArrayList<>();
+
+        for (Cuenta cuenta : cuentas) {
+            List<Movimiento> movimientosEntidad = movimientoRepository.findByCuentaNumeroCuentaAndFechaBetween(
+                    cuenta.getNumeroCuenta(), inicio, fin);
+
+            List<MovimientoReporteDTO> movimientosDTO = movimientosEntidad.stream()
+                    .map(m -> new MovimientoReporteDTO(m.getFecha(), m.getTipoMovimiento(), m.getValor(), m.getSaldo()))
+                    .toList();
+
+            cuentasReporte.add(new CuentaReporteDTO(cuenta.getNumeroCuenta(), cuenta.getTipoCuenta(), cuenta.getSaldo(), movimientosDTO));
+        }
+        return new EstadoCuentaDTO(cliente.getNombre(), cuentasReporte);
     }
 }
 
