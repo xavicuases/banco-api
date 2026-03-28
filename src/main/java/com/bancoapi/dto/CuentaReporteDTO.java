@@ -5,17 +5,18 @@ import java.util.List;
 public class CuentaReporteDTO {
     private String numeroCuenta;
     private String tipoCuenta;
-    private Double saldo;
+    private Double saldoActual;
     private List<MovimientoReporteDTO> movimientos;
 
-    public CuentaReporteDTO(String numeroCuenta, String tipoCuenta, Double saldo, List<MovimientoReporteDTO> movimientos) {
+    public CuentaReporteDTO(String numeroCuenta, String tipoCuenta, Double saldoActual, List<MovimientoReporteDTO> movimientos) {
         this.numeroCuenta = numeroCuenta;
         this.tipoCuenta = tipoCuenta;
-        this.saldo = saldo;
+        this.saldoActual = saldoActual;
         this.movimientos = movimientos;
     }
 
     // Getters y Setters
+
 
     public String getNumeroCuenta() {
         return numeroCuenta;
@@ -33,12 +34,12 @@ public class CuentaReporteDTO {
         this.tipoCuenta = tipoCuenta;
     }
 
-    public Double getSaldo() {
-        return saldo;
+    public Double getSaldoActual() {
+        return saldoActual;
     }
 
-    public void setSaldo(Double saldo) {
-        this.saldo = saldo;
+    public void setSaldoActual(Double saldoActual) {
+        this.saldoActual = saldoActual;
     }
 
     public List<MovimientoReporteDTO> getMovimientos() {

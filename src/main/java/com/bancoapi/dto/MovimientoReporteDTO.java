@@ -7,13 +7,13 @@ public class MovimientoReporteDTO {
     private LocalDateTime fecha;
     private String tipoMovimiento;
     private Double valor;
-    private Double saldo;
+    private Double saldoResultante;
 
-    public MovimientoReporteDTO(LocalDateTime fecha, String tipoMovimiento, Double valor, Double saldo) {
+    public MovimientoReporteDTO(LocalDateTime fecha, String tipoMovimiento, Double valor, Double saldoResultante) {
         this.fecha = fecha;
         this.tipoMovimiento = tipoMovimiento;
         this.valor = valor;
-        this.saldo = saldo;
+        this.saldoResultante = saldoResultante;
 
     }
 
@@ -43,12 +43,12 @@ public class MovimientoReporteDTO {
         this.valor = valor;
     }
 
-    public Double getSaldo() {
-        return saldo;
+    public Double getSaldoResultante() {
+        return saldoResultante;
     }
 
-    public void setSaldo(Double saldo) {
-        this.saldo = saldo;
+    public void setSaldoResultante(Double saldoResultante) {
+        this.saldoResultante = saldoResultante;
     }
 }
 
