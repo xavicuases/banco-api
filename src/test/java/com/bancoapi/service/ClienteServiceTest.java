@@ -1,5 +1,6 @@
 package com.bancoapi.service;
 
+import com.bancoapi.dto.ClienteDTO;
 import com.bancoapi.model.Cliente;
 import com.bancoapi.repository.ClienteRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -58,5 +59,50 @@ class ClienteServiceTest {
         });
 
         assertEquals("Cliente no encontrado", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Debe llamar al repositorio para guardar un cliente")
+    void crearClienteExitoso() {
+        // 1. GIVEN: Preparamos el cliente que queremos crear
+        Cliente nuevoCliente = new Cliente();
+        nuevoCliente.setNombre("Nuevo Usuario");
+        nuevoCliente.setIdentificacion("1234567890");
+
+        // Simulamos que el repositorio devuelve el mismo cliente al guardar
+        when(clienteRepository.save(any(Cliente.class))).thenReturn(nuevoCliente);
+
+        // 2. WHEN: Ejecutamos el método del servicio
+        Cliente resultado = clienteService.crearCliente(nuevoCliente);
+
+        // 3. THEN: Aplicamos Control de Calidad
+        assertNotNull(resultado);
+        assertEquals("Nuevo Usuario", resultado.getNombre());
+
+        // LA PARTE CLAVE: Verificamos que el repositorio fue llamado exactamente 1 vez
+        verify(clienteRepository, times(1)).save(any(Cliente.class));
+    }
+
+    @Test
+    @DisplayName("Debe mapear correctamente los datos de Cliente a ClienteDTO")
+    void testConvertirADTO() {
+        // 1. GIVEN: Una entidad Cliente con datos completos
+        Cliente cliente = new Cliente();
+        cliente.setId(44L);
+        cliente.setNombre("Xavier Cuases");
+        cliente.setIdentificacion("1712345678");
+        cliente.setDireccion("Tulcán, Ecuador");
+        cliente.setTelefono("0999999999");
+
+        // 2. WHEN: Ejecutamos la conversión
+        ClienteDTO dto = clienteService.convertirADTO(cliente);
+
+        // 3. THEN: Verificamos que no se haya perdido ni un solo dato en el camino
+        assertNotNull(dto);
+        assertEquals(cliente.getId(), dto.getId());
+        assertEquals(cliente.getNombre(), dto.getNombre());
+        assertEquals(cliente.getIdentificacion(), dto.getIdentificacion());
+        assertEquals(cliente.getDireccion(), dto.getDireccion());
+        assertEquals(cliente.getTelefono(), dto.getTelefono());
     }
 }
